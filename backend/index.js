@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use("/api/v1/user", userRoute, () => {
     console.log("this was called");
 });
-app.use("/apip/v1/message", messageRoute, () => {
+app.use("/api/v1/message", messageRoute, () => {
     console.log("this was called");
 })
 

@@ -29,7 +29,26 @@ export const sendMessage = async (req, res) => {
 
         await gotConversation.save();
         //implement socketIo 
+
+        return res.status(201).json({
+            message: "Message sent successfully"
+        })
     }catch (err) {
+        console.error(err);
+    }
+};
+
+export const getMessage = async (req, res) => {
+    try{
+        const receiverId = req.params.id;
+        const senderId = req.id;
+        const conversation = await Conversation.findOne({
+            participants: {$all: [senderId, receiverId]}
+        }).populate('messages');
+
+        console.log(conversation.messages);
+
+    }catch(err){
         console.error(err);
     }
 }
