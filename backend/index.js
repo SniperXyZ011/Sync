@@ -12,9 +12,15 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 
-app.use(cors());
+app.use(express.urlencoded({extended : true}));  
 app.use(express.json());
 app.use(cookieParser());
+
+const corsOption = {
+    origin : "http://localhost:5173",
+    credentials : true,
+}
+app.use(cors(corsOption));
 
 app.use("/api/v1/user", userRoute, () => {
     console.log("this was called");

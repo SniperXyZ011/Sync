@@ -1,0 +1,4 @@
+.overflow-auto {
+    overflow: auto;
+    scrollbar-width: none !important;
+}
