@@ -64,17 +64,26 @@ export const login = async (req, res) => {
         const tokenData = {
             userId: user.id,
         }
-        const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {expiresIn: '1d'});
+        const token = jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {expiresIn: '1d'});
 
-        return res.status(200).cookie('token', token, {maxAge: 1*24*60*60*1000, httpOnly: true, sameSite : 'strict'}).json({
-            _id : user._id,
-            username : user.username,
-            fullName : user.fullName,
-            profilePhoto : user.profilePhoto
-        })
+        return res.status(200)
+            .cookie('token', token, {
+                maxAge: 24 * 60 * 60 * 1000, // 1 day
+                httpOnly: true,
+                sameSite: 'lax',  // Changed from 'strict' to 'lax'
+                secure: process.env.NODE_ENV === 'production', // Only use HTTPS in production
+                path: '/'  // Ensure cookie is available for all paths
+            })
+            .json({
+                _id: user._id,
+                username: user.username,
+                fullName: user.fullName,
+                profilePhoto: user.profilePhoto
+            });
 
     }catch(err) {
         console.log(err);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
 
@@ -95,5 +104,23 @@ export const getOtherUsers = async (req, res) => {
         return res.status(200).json(otherUsers);
     }catch(err){
         console.log(err);
+    }
+}
+
+export const getAuthStatus = async (req, res) => {
+    try {
+        const user = await User.findById(req.id).select("-password");
+        if (!user) {
+            return res.status(401).json({ message: "User not found" });
+        }
+        return res.status(200).json({
+            _id: user._id,
+            username: user.username,
+            fullName: user.fullName,
+            profilePhoto: user.profilePhoto
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
