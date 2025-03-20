@@ -14,7 +14,23 @@ const messageModel = new mongoose.Schema({
     message: {
         type: String,
         required: true,
-    }
+    },
+    read: {
+        type: Boolean,
+        default: false
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+    isEdited: {
+        type: Boolean,
+        default: false
+    },
+    editHistory: [{
+        message: String,
+        editedAt: Date
+    }]
 }, {
     timestamps: true,
 });

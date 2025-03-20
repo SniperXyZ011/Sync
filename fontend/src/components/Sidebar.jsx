@@ -5,37 +5,44 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setAuthUser, setOtherUsers } from "../redux/userSlice.js";
+import { setMessages } from "../redux/messageSlice.jsx";
 
 const Sidebar = () => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  const {otherUsers} = useSelector(store => store.user);
+  const { otherUsers } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   const handleLogOut = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/user/logout');
+      const response = await axios.get(
+        "http://localhost:8080/api/v1/user/logout"
+      );
       console.log(response.data.message);
       toast.success(response.data.message);
-      dispatch(setAuthUser(null))
       navigate("/login");
-    }catch (e) {
+      dispatch(setAuthUser(null));
+      dispatch(setMessages(null));
+      dispatch(setOtherUsers(null));
+      dispatch(setSelectedUser(null));
+    } catch (e) {
       console.error(e);
     }
-  }
+  };
 
   const searchHandler = (e) => {
     e.preventDefault();
-    const convoUser = otherUsers.find((user) => user.fullName.toLowerCase().includes(search.toLowerCase()));
+    const convoUser = otherUsers?.find((user) =>
+      user.fullName.toLowerCase().includes(search.toLowerCase())
+    );
 
-    if(convoUser){
-      dispatch(setOtherUsers([convoUser]))
-    }else {
-      toast.error("User not found!")
+    if (convoUser) {
+      dispatch(setOtherUsers([convoUser]));
+    } else {
+      toast.error("User not found!");
     }
-
-  }
+  };
 
   return (
     <div className="border-r border-slate-500 p-4 flex flex-col">
@@ -49,7 +56,10 @@ const Sidebar = () => {
           type="text"
           placeholder="search..."
         />
-        <button type="submit" className="btn border-white bg-gray-500 text-white">
+        <button
+          type="submit"
+          className="btn border-white bg-gray-500 text-white"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
@@ -67,7 +77,12 @@ const Sidebar = () => {
       <div className="divider px-3"></div>
       <OtherUsers />
       <div className="mt-2">
-        <button onClick={handleLogOut} className="btn btn-sm bg-gray-600 text-white">Logout</button>
+        <button
+          onClick={handleLogOut}
+          className="btn btn-sm bg-gray-600 text-white"
+        >
+          Logout
+        </button>
       </div>
     </div>
   );

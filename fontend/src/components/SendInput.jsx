@@ -1,16 +1,39 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessages } from "../redux/messageSlice";
-
-
+import { socketManager } from "../utils/socketManager";
 
 const SendInput = () => {
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
   const {messages} = useSelector(store => store.message);
-  const selectedUser = useSelector((store) => store.user.selectedUser);
+  const {selectedUser, authUser} = useSelector((store) => store.user);
+  const [typingTimeout, setTypingTimeout] = useState(null);
+
+  const handleTyping = () => {
+    const socket = socketManager.getSocket();
+    if (socket && selectedUser?._id) {
+      socket.emit('typing', {
+        senderId: authUser._id,
+        receiverId: selectedUser._id
+      });
+
+      // Clear existing timeout
+      if (typingTimeout) clearTimeout(typingTimeout);
+
+      // Set new timeout
+      const timeout = setTimeout(() => {
+        socket.emit('stopTyping', {
+          senderId: authUser._id,
+          receiverId: selectedUser._id
+        });
+      }, 1000);
+
+      setTypingTimeout(timeout);
+    }
+  };
 
   const sendMessageHandler = async (e) => {
     e.preventDefault();
@@ -30,11 +53,29 @@ const SendInput = () => {
       console.log(res.data.message.message);
       dispatch(setMessages([...messages, res.data.message]));
       setMessage("");
+      
+      // Clear typing indicator when message is sent
+      const socket = socketManager.getSocket();
+      if (socket) {
+        socket.emit('stopTyping', {
+          senderId: authUser._id,
+          receiverId: selectedUser._id
+        });
+      }
     } catch (err) {
       console.log(err);
       alert("Failed to send message. Please try again.");
     }
   };
+
+  // Cleanup typing timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
+    };
+  }, [typingTimeout]);
 
   return (
     <form onSubmit={sendMessageHandler}>
@@ -43,6 +84,7 @@ const SendInput = () => {
           value={message}
           onChange={(e) => {
             setMessage(e.target.value);
+            handleTyping();
           }}
           type="text"
           placeholder="send something..."
