@@ -1,4 +1,4 @@
-# Sync Project
+# Sync: Real-time chatting App
 
 Sync is a full-stack web application designed to facilitate real-time communication through both backend API services and a responsive frontend interface, this is a web based chatting application.
 
