@@ -25,7 +25,7 @@ const Message = ({message}) => {
         </div>
       </div>
       <div className="chat-header">
-        <time className="text-xs opacity-50 text-white">
+        <time className="text-xs opacity-50 text-white font-extralight">
           {formatTime(message.createdAt)}
         </time>
       </div>
