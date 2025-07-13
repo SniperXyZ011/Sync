@@ -15,7 +15,7 @@ const useGetMessages = () => {
             try {
                 console.log(selectedUser?._id);
                 axios.defaults.withCredentials = true;
-                const response = await axios.get(`http://localhost:8080/api/v1/message/${selectedUser?._id}`);
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/message/${selectedUser?._id}`);
                 console.log(response.data);                
                 if (response.data.length === 0) {
                     dispatch(setMessages([])); // Clear messages if none are found

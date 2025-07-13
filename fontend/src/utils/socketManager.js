@@ -7,7 +7,7 @@ class SocketManager {
 
     connect(userId) {
         if (!this.socket) {
-            this.socket = io('http://localhost:8080', {
+            this.socket = io(`${import.meta.env.BASE_URL}`, {
                 query: { userId }
             });
         }
