@@ -8,7 +8,9 @@ class SocketManager {
     connect(userId) {
         if (!this.socket) {
             this.socket = io(`${import.meta.env.BASE_URL}`, {
-                query: { userId }
+                query: { userId },
+                withCredentials: true,
+                transports: ["websocket"],
             });
         }
         return this.socket;
