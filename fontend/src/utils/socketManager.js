@@ -7,7 +7,7 @@ class SocketManager {
 
     connect(userId) {
         if (!this.socket) {
-            this.socket = io(`${import.meta.env.BASE_URL}`, {
+            this.socket = io(`${import.meta.env.VITE_BASE_URL}`, {
                 query: { userId },
                 withCredentials: true,
                 transports: ["websocket"],

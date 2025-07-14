@@ -19,7 +19,7 @@ const Login = () => {
         e.preventDefault();
         console.log(user);
         try {
-            const res = await axios.post( `${import.meta.env.VITE_BASE_URL}/user/login`, user, {
+            const res = await axios.post( `${import.meta.env.VITE_BASE_URL}/api/v1/user/login`, user, {
               headers: {
                 "Content-Type": "application/json",
               },

@@ -43,7 +43,7 @@ const SendInput = () => {
     }
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/message/send/${selectedUser?._id}`,
+        `${import.meta.env.VITE_BASE_URL}/api/v1/message/send/${selectedUser?._id}`,
         { message: message },
         {
           headers: { "Content-Type": "application/json" },

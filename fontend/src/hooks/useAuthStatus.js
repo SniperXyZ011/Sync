@@ -12,7 +12,7 @@ const useAuthStatus = () => {
 
         const checkAuth = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/user/auth-status`, {
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/user/auth-status`, {
                     withCredentials: true,
                     headers: {
                         'Content-Type': 'application/json',

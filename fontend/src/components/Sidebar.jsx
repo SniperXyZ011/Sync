@@ -17,7 +17,7 @@ const Sidebar = () => {
   const handleLogOut = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/user/logout`
+        `${import.meta.env.VITE_BASE_URL}/api/v1/user/logout`
       );
       console.log(response.data.message);
       toast.success(response.data.message);
